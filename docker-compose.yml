@@ -30,8 +30,8 @@ services:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: rpg-system
-      MYSQL_ROOT_PASSWORD: rpg-system
-      MYSQL_USER: admin
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
       MYSQL_PASSWORD: admin
     volumes:
       - mysql-data:/var/lib/mysql
