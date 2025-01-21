@@ -16,6 +16,7 @@ services:
       - PHP_POST_MAX_SIZE=100M
     depends_on:
       - mysql
+    command: bash -c "docker-php-ext-install pdo pdo_mysql && php-fpm"
 
   web:
     image: nginx:alpine
@@ -45,6 +46,21 @@ services:
     networks:
       - laravel
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: laravel
+      PMA_PASSWORD: secret
+    ports:
+      - "8080:80"
+    networks:
+      - laravel
+    depends_on:
+      - mysql
+      
 networks:
   laravel:
 
