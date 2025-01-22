@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('guilds', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('session_id')->constrained('rpg_sessions')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('rpg_sessions', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->dateTime('date_session');
+            $table->enum('status', ['waiting', 'in_progress', 'closed'])->default('waiting');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

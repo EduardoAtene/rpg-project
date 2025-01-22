@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->unsignedInteger('xp')->default(1)->max(100);
+            $table->foreignId('class_id')->constrained('player_classes')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
