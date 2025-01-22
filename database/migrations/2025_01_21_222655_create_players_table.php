@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('players', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->string('name');
             $table->unsignedInteger('xp')->default(1)->max(100);
             $table->foreignId('player_class_id')->constrained('player_class')->onDelete('cascade');

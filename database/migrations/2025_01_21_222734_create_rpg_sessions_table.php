@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rpg_sessions', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
+
             $table->string('name');
             $table->dateTime('date_session');
             $table->enum('status', ['waiting', 'in_progress', 'closed'])->default('waiting');

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('player_guilds', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('player_id')->constrained('players')->onDelete('cascade');
-            $table->foreignId('guild_id')->constrained('guilds')->onDelete('cascade');
-            $table->primary(['player_id', 'guild_id']);
+        Schema::create('guilds', function (Blueprint $table) {
+            $table->id()->autoIncrement();
+
+            $table->string('name');
+            $table->foreignId('session_id')->constrained('rpg_sessions')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('player_guilds');
+        Schema::dropIfExists('guilds');
     }
 };
