@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('session_id')->constrained('rpg_sessions')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

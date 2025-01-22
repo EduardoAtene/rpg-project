@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('player_session', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('player_id')->constrained('players')->onDelete('cascade');
             $table->foreignId('session_id')->constrained('rpg_sessions')->onDelete('cascade');
             $table->enum('status', ['uninitialized','attend', 'missing'])->default('uninitialized');

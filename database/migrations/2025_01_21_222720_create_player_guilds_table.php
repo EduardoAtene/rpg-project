@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('player_guilds', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('player_id')->constrained('players')->onDelete('cascade');
             $table->foreignId('guild_id')->constrained('guilds')->onDelete('cascade');
             $table->primary(['player_id', 'guild_id']);

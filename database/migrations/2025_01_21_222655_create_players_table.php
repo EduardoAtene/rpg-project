@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedInteger('xp')->default(1)->max(100);
-            $table->foreignId('class_id')->constrained('player_classes')->onDelete('cascade');
-            $table->softDeletes();
+            $table->foreignId('player_class_id')->constrained('player_class')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
