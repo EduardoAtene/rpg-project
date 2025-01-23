@@ -12,7 +12,6 @@ class PlayerController extends Controller
         // return response()->json(Player::all());
         $players = Player::with('class')->get();
 
-        dd($players);
         return view('players.index', compact('players'));
     }
 }
