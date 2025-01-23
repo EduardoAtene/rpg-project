@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->foreignId('player_id')->constrained('players')->onDelete('cascade');
             $table->foreignId('guild_id')->constrained('guilds')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
