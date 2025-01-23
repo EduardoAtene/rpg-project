@@ -10,4 +10,4 @@ Route::get('/', function () {
 // Route::get('/players', function () {
 //     return view('./players/index');
 // });
-Route::get('/players', [PlayerController::class, 'index']);
+// Route::get('/players', [PlayerController::class, 'index']);

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        @include('layouts.partials.navbar')
+        @include('layouts.navbar')
 
         <div class="content mt-4">
             @yield('content')
