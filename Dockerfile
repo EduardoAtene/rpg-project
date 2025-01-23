@@ -18,17 +18,14 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
-    && apt-get install -y libmysqlclient-dev \
+    libmariadb-dev-compat \
+    libmariadb-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
 # Copiar o Composer para o container
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Instalar dependências do Composer (passo crítico)
-COPY composer.json composer.lock /var/www/
-RUN composer install --optimize-autoloader --no-dev
 
 # Copiar os arquivos do projeto para o container
 COPY . /var/www
