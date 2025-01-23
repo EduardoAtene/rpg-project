@@ -30,9 +30,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiar os arquivos do projeto para o container
 COPY . /var/www
 
-# Ajustar permissões
+# Ajustar permissões de arquivos e pastas
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 755 /var/www
 
 EXPOSE 9000
 
