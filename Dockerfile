@@ -26,8 +26,16 @@ RUN apt-get update && apt-get install -y \
 # Copiar o Composer para o container
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Instalar dependências do Composer (passo crítico)
+COPY composer.json composer.lock /var/www/
+RUN composer install --optimize-autoloader --no-dev
+
 # Copiar os arquivos do projeto para o container
 COPY . /var/www
+
+# Ajustar permissões
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
 
