@@ -1,8 +1,15 @@
-<button 
-    class="btn {{ $type ?? 'btn-primary' }} {{ $class ?? '' }}" 
-    onclick="{{ $onclick ?? '' }}"
->
-    @isset($slot)
-    {{ $slot }}
-    @endisset
-</button>
+@if(isset($href))
+    <a 
+        href="{{ $href }}" 
+        class="btn {{ $type ?? 'btn-primary' }} {{ $size ?? 'btn-lg' }} {{ $class ?? '' }}" 
+    >
+        {{ $slot }}
+    </a>
+@else
+    <button 
+        class="btn {{ $type ?? 'btn-primary' }} {{ $size ?? 'btn-lg' }} {{ $class ?? '' }}" 
+        onclick="{{ $onclick ?? '' }}"
+    >
+        {{ $slot }}
+    </button>
+@endif

@@ -22,7 +22,7 @@
                 <option value="Guerreiro">Guerreiro</option>
             </select>
         </div>
-        @include('layouts.components.button', ['type' => 'btn-success'])
+        @component('layouts.components.button', ['type' => 'btn-success'])
             Salvar Jogador
         @endcomponent
     </form>
