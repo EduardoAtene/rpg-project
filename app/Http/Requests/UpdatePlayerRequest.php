@@ -20,7 +20,7 @@ class UpdatePlayerRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|string|max:255',
-            'xp' => 'sometimes|integer',
+            'xp' => 'sometimes|integer|min:1|max:100',
             // 'player_class_id' => 'sometimes|exists:player_class,id', 
             // Vou fazer nesse momento para a pesso não editar a classe, ignorar e depois limpar esse carinha
         ];

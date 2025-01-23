@@ -15,4 +15,14 @@ class Player extends Model
     {
         return $this->belongsTo(PlayerClass::class, 'player_class_id');
     }
+
+    public function guilds()
+    {
+        return $this->belongsToMany(Guild::class, 'player_guilds');
+    }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(RpgSession::class, 'player_session');
+    }
 }

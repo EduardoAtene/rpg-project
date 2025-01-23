@@ -5,18 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePlayerRequest;
 use App\Http\Requests\UpdatePlayerRequest;
-use App\Models\Player;
 use App\Services\PlayerService;
-use Illuminate\Http\Request;
 
 class PlayerController extends Controller
 {
-    protected $playerService;
+    protected PlayerService $playerService;
 
     public function __construct(PlayerService $playerService)
     {
         $this->playerService = $playerService;
     }
+
     public function index()
     {
         $players = $this->playerService->getAllPlayers();
@@ -38,6 +37,7 @@ class PlayerController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Jogador criado com sucesso.',
             'data' => $player,
         ], 201);
     }
@@ -48,6 +48,7 @@ class PlayerController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Jogador atualizado com sucesso.',
             'data' => $player,
         ], 200);
     }

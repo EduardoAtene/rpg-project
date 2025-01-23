@@ -1,34 +1,54 @@
 <div class="container">
     <h1 class="mb-4">{{ $title }}</h1>
-    <form id="{{ $id }}" class="shadow p-4 rounded bg-white {{ $class ?? '' }}" action="{{ $action }}" method="{{ $method }}">
+    <form id="{{ $id }}" class="shadow p-4 rounded bg-white {{ $class ?? '' }}" action="{{ $action }}" method="POST">
         @csrf
-        @if($method !== 'POST' && $method !== 'GET')
+        @if (strtoupper($method) !== 'POST' && strtoupper($method) !== 'GET')
             @method($method)
         @endif
 
         @foreach ($fields as $field)
-            @if ($field['type'] === 'select')
-                @component('layouts.components.select', [
-                    'label' => $field['label'],
-                    'id' => $field['id'],
-                    'name' => $field['name'],
-                    'required' => $field['required'] ?? false,
-                    'options' => $field['options'] ?? [],
-                    'selected' => $field['selected'] ?? null
-                ])
-                @endcomponent
-            @else
-                @component('layouts.components.input', [
-                    'type' => $field['type'] ?? 'text',
-                    'label' => $field['label'],
-                    'id' => $field['id'],
-                    'name' => $field['name'],
-                    'required' => $field['required'] ?? false,
-                    'value' => $field['value'] ?? null,
-                    'placeholder' => $field['placeholder'] ?? ''
-                ])
-                @endcomponent
-            @endif
+            @switch($field['type'])
+                @case('select')
+                    @component('layouts.components.select', [
+                        'label' => $field['label'],
+                        'id' => $field['id'],
+                        'name' => $field['name'],
+                        'required' => $field['required'] ?? false,
+                        'options' => $field['options'] ?? [],
+                        'selected' => $field['selected'] ?? null,
+                        'class' => $field['class'] ?? ''
+                    ])
+                    @endcomponent
+                    @break
+
+                @case('textarea')
+                    @component('layouts.components.textarea', [
+                        'label' => $field['label'],
+                        'id' => $field['id'],
+                        'name' => $field['name'],
+                        'required' => $field['required'] ?? false,
+                        'value' => $field['value'] ?? null,
+                        'placeholder' => $field['placeholder'] ?? '',
+                        'rows' => $field['rows'] ?? 3,
+                        'class' => $field['class'] ?? ''
+                    ])
+                    @endcomponent
+                    @break
+
+                @default
+                    @component('layouts.components.input', [
+                        'type' => $field['type'] ?? 'text',
+                        'label' => $field['label'],
+                        'id' => $field['id'],
+                        'name' => $field['name'],
+                        'required' => $field['required'] ?? false,
+                        'value' => $field['value'] ?? null,
+                        'placeholder' => $field['placeholder'] ?? '',
+                        'class' => $field['class'] ?? ''
+                    ])
+                    @endcomponent
+                    @break
+            @endswitch
         @endforeach
 
         <div class="mt-4">
