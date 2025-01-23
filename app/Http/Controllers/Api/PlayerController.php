@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePlayerRequest;
+use App\Http\Requests\UpdatePlayerRequest;
 use App\Models\Player;
 use App\Services\PlayerService;
 use Illuminate\Http\Request;
@@ -18,24 +19,22 @@ class PlayerController extends Controller
     }
     public function index()
     {
-        $players = $this->playerService->index();
+        $players = $this->playerService->getAllPlayers();
 
         return response()->json($players);
     }
     
     public function show($id)
     {
-        $player = Player::with('class')->find($id);
+        $player = $this->playerService->getPlayerById($id);
 
         return response()->json($player);
     }
 
     public function store(StorePlayerRequest $request)
     {
-        // dd("a");
-        $teste = $request->validated();
-        // dd
-        $player = Player::create($request->all());
+        $request = $request->validated();
+        $player = $this->playerService->createPlayer($request);
 
         return response()->json([
             'success' => true,
@@ -43,20 +42,25 @@ class PlayerController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdatePlayerRequest $request, $id)
     {
-        $player = Player::find($id);
-        $player->update($request->all());
+        $player = $this->playerService->updatePlayer($request->validated(), $id);
 
-        return response()->json($player);
+        return response()->json([
+            'success' => true,
+            'data' => $player,
+        ], 200);
     }
 
     public function destroy($id)
     {
-        $player = Player::find($id);
+        $player = $this->playerService->deletePlayer($id);
         $player->delete();
 
-        return response()->json(null, 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Jogador excluído com sucesso.',
+        ], 200);
     }
 
 }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
+use App\Traits\ValidationRequestFailed;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StorePlayerRequest extends FormRequest
 {
+    use ValidationRequestFailed;
+
     public function authorize(): bool
     {
         return true; // Caso futuramente a gente tiver alteração
@@ -17,7 +18,7 @@ class StorePlayerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'xp' => 'required|integer',
+            'xp' => 'required|integer|min:1|max:100',
             'player_class_id' => 'required|exists:player_class,id',
         ];
     }
@@ -26,18 +27,12 @@ class StorePlayerRequest extends FormRequest
     {
         return [
             'name.required' => 'O nome do jogador é obrigatório.',
+            'name.string' => 'O nome do jogador deve ser uma string.',
             'xp.required' => 'O XP do jogador é obrigatório.',
+            'xp.integer' => 'O valor do XP deve ser um inteiro.',
+            'xp.min' => 'O valor mínimo XP é 1.',
+            'xp.max' => 'O valor máximo XP é 100.',
             'player_class_id.exists' => 'A classe do jogador deve ser válida.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        // Retorna um JSON estruturado
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Erro de validação',
-            'errors' => $validator->errors(), // Erros de validação
-        ], 422)); // Código de status 422 - Unprocessable Entity
     }
 }

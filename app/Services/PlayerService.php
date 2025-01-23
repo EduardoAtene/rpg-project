@@ -1,49 +1,40 @@
 <?php
+
 namespace App\Services;
 
 use App\Interfaces\PlayerInterface;
 
 class PlayerService
 {
-    protected PlayerInterface $player ;
-    
-    public function __construct(PlayerInterface $player)
-    {
-        $this->player = $player;
-    }
-    
-    public function index()
-    {
-        $players = $this->player->index();
+    protected $playerRepository;
 
-        return $players;
-    }
-    
-    public function store($data)
+    public function __construct(PlayerInterface $playerRepository)
     {
-        $player = $this->player->store($data);
+        $this->playerRepository = $playerRepository;
+    }
 
-        return $player;
-    }
-    
-    public function show($id)
+    public function getAllPlayers()
     {
-        $player = $this->player->show($id);
+        return $this->playerRepository->index();
+    }
 
-        return $player;
-    }
-    
-    public function update($data, $id)
+    public function createPlayer($data)
     {
-        $player = $this->player->update($data, $id);
+        return $this->playerRepository->store($data);
+    }
 
-        return $player;
-    }
-    
-    public function destroy($id)
+    public function getPlayerById($id)
     {
-        $player = $this->player->destroy($id);
-        
-        return $player;
+        return $this->playerRepository->show($id);
+    }
+
+    public function updatePlayer($data, $id)
+    {
+        return $this->playerRepository->update($data, $id);
+    }
+
+    public function deletePlayer($id)
+    {
+        return $this->playerRepository->destroy($id);
     }
 }
