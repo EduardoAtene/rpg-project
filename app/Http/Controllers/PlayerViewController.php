@@ -26,4 +26,13 @@ class PlayerViewController extends Controller
     {
         return view('players/create');
     }
+
+    public function edit($id)
+    {
+        $player = $this->playerService->getPlayerById($id);
+
+        return view('players/edit', [
+            'player' => $player,
+        ]);
+    }
 }

@@ -6,7 +6,7 @@
             <h1 class="display-4">RPG Mensal</h1>
             <p class="lead">Esse é um simulador de Guildas e balanceamento de jogadores.</p>
             @include('layouts.components.button', [
-                'type' => 'btn-primary',
+                'type' => 'btn btn-outline-danger',
                 'size' => 'btn-lg',
                 'class' => 'me-3',
                 'onclick' => '',
@@ -14,7 +14,7 @@
                 'href' => url('/sessions')
             ])
             @include('layouts.components.button', [
-                'type' => 'btn-secondary',
+                'type' => 'btn btn-outline-info',
                 'size' => 'btn-lg',
                 'onclick' => '',
                 'slot' => 'Jogadores',

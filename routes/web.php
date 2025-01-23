@@ -9,3 +9,4 @@ Route::get('/', function () {
 
 Route::get('/players', [PlayerViewController::class, 'index']);
 Route::get('/players/create', [PlayerViewController::class, 'create']);
+Route::get('/players/{id}/edit', [PlayerViewController::class, 'edit']);
