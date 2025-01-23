@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PlayerSession extends Pivot
+class PlayerSession extends Model
 {
     protected $table = 'player_session';
 

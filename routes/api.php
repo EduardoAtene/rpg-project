@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PlayerController;
+use App\Http\Controllers\Api\RpgSessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -8,12 +9,18 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
+Route::prefix('players')->group(function () {
+    Route::get('/', [PlayerController::class, 'index'])->name('players.index');
+    Route::post('/', [PlayerController::class, 'store'])->name('players.store');
+    Route::get('/{id}', [PlayerController::class, 'show'])->name('players.show');
+    Route::put('/{id}', [PlayerController::class, 'update'])->name('players.update');
+    Route::delete('/{id}', [PlayerController::class, 'destroy'])->name('players.destroy');
+});
 
-// Route::apiResource('/players', PlayerController::class);
-
-// Route::apiResource('players', PlayerController::class);
-Route::get('/players', [PlayerController::class, 'index']);
-Route::post('/players', [PlayerController::class, 'store']);
-Route::get('/players/{id}', [PlayerController::class, 'show']);
-Route::put('/players/{id}', [PlayerController::class, 'update']);
-Route::delete('/players/{id}', [PlayerController::class, 'destroy']);
+Route::prefix('sessions')->group(function () {
+    Route::get('/', [RpgSessionController::class, 'index'])->name('sessions.index');
+    Route::get('/{id}', [RpgSessionController::class, 'show'])->name('sessions.show');
+    Route::post('/', [RpgSessionController::class, 'store'])->name('sessions.store');
+    Route::put('/{id}', [RpgSessionController::class, 'update'])->name('sessions.update');
+    Route::delete('/{id}', [RpgSessionController::class, 'destroy'])->name('sessions.destroy');
+});
