@@ -41,5 +41,5 @@ Route::prefix('sessions')->group(function () {
     });
 });
 
-// Route::post('/simulate-guilds', [GuildSimulateController::class, 'simulate']); pensado endpoitn para simulação
-// Route::post('/simulate-guilds/confirm', [GuildSimulateController::class, 'simulate']); pensado endpoitn para efetivação da simulação de guilda e inicio da sessão
+Route::post('/simulate-guilds', [GuildSimulateController::class, 'simulate']);
+Route::post('/simulate-guilds/confirm', [GuildSimulateController::class, 'confirm']);

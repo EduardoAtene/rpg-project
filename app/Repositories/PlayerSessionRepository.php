@@ -25,11 +25,30 @@ class PlayerSessionRepository implements PlayerSessionInterface
         return $query->get();
     }
 
+    public function associatePlayers(int $sessionId, array $playerIds)
+    {
+        foreach ($playerIds as $playerId) {
+            PlayerSession::updateOrCreate(
+                ['player_id' => $playerId, 'session_id' => $sessionId],
+                ['status' => 'attend']
+            );
+        }
+    }
+
+    public function unassociatePlayers(int $sessionId, array $playerIds)
+    {
+        PlayerSession::where('session_id', $sessionId)
+            ->whereIn('player_id', $playerIds)
+            ->delete(['status' => 'missing']);
+    }
+
     private function applySessionFilter($query, int $sessionId, bool $associated)
     {
         if ($associated) {
             $query->whereHas('sessions', function ($q) use ($sessionId) {
-                $q->where('session_id', $sessionId);
+                $q  ->where('session_id', $sessionId)
+                    ->where('player_session.status', 'attend'); 
+
             });
 
             return;

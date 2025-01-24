@@ -29,4 +29,27 @@ class PlayerSessionService
 
         return $this->playerSessionRepository->filterPlayers($sessionId, $filters);
     }
+
+
+    public function associatePlayersToSession(int $sessionId, array $playerIds)
+    {
+        $session = $this->rpgSessionRepository->getById($sessionId);
+
+        if (!$session) {
+            throw new Exception('Sessão não encontrada.', 404);
+        }
+
+        $this->playerSessionRepository->associatePlayers($sessionId, $playerIds);
+    }
+
+    public function unassociatePlayersFromSession(int $sessionId, array $playerIds)
+    {
+        $session = $this->rpgSessionRepository->getById($sessionId);
+
+        if (!$session) {
+            throw new Exception('Sessão não encontrada.', 404);
+        }
+
+        $this->playerSessionRepository->unassociatePlayers($sessionId, $playerIds);
+    }
 }
