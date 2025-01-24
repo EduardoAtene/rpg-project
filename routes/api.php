@@ -34,8 +34,8 @@ Route::prefix('sessions')->group(function () {
     Route::delete('/{id}', [RpgSessionController::class, 'destroy'])->name('sessions.destroy');
 
     Route::prefix('/{id}/players')->group(function () {
-        Route::get('/', [PlayerSessionController::class, 'getAllPlayersAssociateSession'])->name('sessions.players.all.associate.session');
-        Route::get('/unassociated', [PlayerSessionController::class, 'getAllPlayersUnassociateSession'])->name('sessions.players.unassociated');
+        Route::get('/', [PlayerSessionController::class, 'filterPlayers'])->name('sessions.players.filter');
+
         Route::post('/', [PlayerSessionController::class, 'associate'])->name('sessions.players.associate');
         Route::delete('/', [PlayerSessionController::class, 'unassociate'])->name('sessions.players.unassociate');
     });

@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FilterPlayersSessionRequest;
+use App\Http\Resources\PlayerSessionResource;
+use App\Models\PlayerSession;
 use App\Services\PlayerSessionService;
+use Illuminate\Http\JsonResponse;
 
 class PlayerSessionController extends Controller
 {
@@ -15,18 +19,16 @@ class PlayerSessionController extends Controller
         $this->playerSessionService = $playerSessionService;
     }
 
-    public function getAllPlayersAssociateSession(int $id)
+    public function filterPlayers(FilterPlayersSessionRequest $request,int $id): JsonResponse
     {
-        $this->playerSessionService->getAllPlayersAssociateSession($sessionId);
-
-
-
+        $validated = $request->validated();
+        $playerSessions = $this->playerSessionService->filterPlayersBySession($id, $validated);
 
         return  response()->json(
             ResponseHelper::successResponse(
                 'Listagem de jogadores obtida com sucesso!',
-                // [PlayerSessionResource::$playerSessionsLabel => PlayerSessionResource::collection($playerSessions)]
-                []
+                [PlayerSessionResource::$playersAssociatedLabel => $request->get('associated') == 1,
+                PlayerSessionResource::$playerSessionLabel => PlayerSessionResource::collection($playerSessions)]
             )
         );
     }

@@ -1,82 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Helpers\ResponseHelper;
-use App\Http\Requests\StorePlayerRequest;
-use App\Http\Requests\UpdatePlayerRequest;
-use App\Http\Resources\PlayerResource;
 use App\Services\PlayerService;
-use Illuminate\Http\JsonResponse;
 
-class PlayerController extends Controller
+class PlayerViewController extends Controller
 {
-    protected PlayerService $playerService;
+    protected $playerService;
 
     public function __construct(PlayerService $playerService)
     {
         $this->playerService = $playerService;
     }
 
-    public function index(): JsonResponse
+    public function index()
     {
         $players = $this->playerService->getAllPlayers();
 
-        return response()->json(ResponseHelper::successResponse(
-            'Listagem de jogadores obtida com sucesso!',
-            [PlayerResource::$playersLabel => PlayerResource::collection($players)]
-        ));
+        return view('players/index', [
+            'players' => $players,
+        ]);
     }
 
-    public function show($id): JsonResponse
+    public function create()
+    {
+        return view('players/create');
+    }
+
+    public function edit($id)
     {
         $player = $this->playerService->getPlayerById($id);
 
-        if (!$player) {
-            return ResponseHelper::errorResponse('Jogador não encontrado.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Detalhes do jogador obtidos com sucesso!',
-            [PlayerResource::$playerLabel => new PlayerResource($player)]
-        ));
-    }
-
-    public function store(StorePlayerRequest $request): JsonResponse
-    {
-        $player = $this->playerService->createPlayer($request->validated());
-
-        return response()->json(ResponseHelper::successResponse(
-            'Jogador criado com sucesso!',
-            [PlayerResource::$playerLabel => new PlayerResource($player)]
-        ), 201);
-    }
-
-    public function update(UpdatePlayerRequest $request, string $id): JsonResponse
-    {
-        $player = $this->playerService->updatePlayer($id, $request->validated());
-
-        if (!$player) {
-            return ResponseHelper::errorResponse('Jogador não encontrado.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Jogador atualizado com sucesso!',
-            [PlayerResource::$playerLabel => new PlayerResource($player)]
-        ));
-    }
-
-    public function destroy(string $id): JsonResponse
-    {
-        $player = $this->playerService->deletePlayer($id);
-
-        if (!$player) {
-            return ResponseHelper::errorResponse('Jogador não encontrado.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Jogador excluído com sucesso!'
-        ), 200);
+        return view('players/edit', [
+            'player' => $player,
+        ]);
     }
 }

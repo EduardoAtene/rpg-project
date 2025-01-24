@@ -23,6 +23,6 @@ class Player extends Model
 
     public function sessions()
     {
-        return $this->belongsToMany(RpgSession::class, 'player_session');
+        return $this->belongsToMany(RpgSession::class, 'player_session', 'player_id', 'session_id');
     }
 }

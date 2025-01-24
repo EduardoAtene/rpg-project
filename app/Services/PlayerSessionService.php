@@ -3,24 +3,30 @@
 namespace App\Services;
 
 use App\Interfaces\PlayerSessionInterface;
-use App\Repositories\RpgSessionRepository;
+use App\Interfaces\RpgSessionInterface;
+use Exception;
 
 class PlayerSessionService
 {
     protected PlayerSessionInterface $playerSessionRepository;
-    protected RpgSessionRepository $rpgSessionRepository;
+    protected RpgSessionInterface $rpgSessionRepository;
 
     public function __construct(
         PlayerSessionInterface $playerSessionRepository, 
-        RpgSessionRepository $rpgSessionRepository,
+        RpgSessionInterface $rpgSessionRepository
     ) {
         $this->playerSessionRepository = $playerSessionRepository;
         $this->rpgSessionRepository = $rpgSessionRepository;
     }
 
-    public function getAllPlayersAssociateSession($sessionId)
+    public function filterPlayersBySession(int $sessionId, array $filters)
     {
+        $session = $this->rpgSessionRepository->getById($sessionId);
 
+        if (!$session) {
+            throw new Exception('Sessão não encontrada.', 404);
+        }
+
+        return $this->playerSessionRepository->filterPlayers($sessionId, $filters);
     }
-
 }

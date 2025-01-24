@@ -26,4 +26,10 @@ class RpgSession extends Model
     protected $casts = [
         'date_session' => 'datetime',
     ];
+
+    public function players()
+    {
+        return $this->belongsToMany(Player::class, 'player_session', 'session_id', 'player_id');
+    }
+
 }

@@ -17,6 +17,6 @@ class PlayerSession extends Model
 
     public function session()
     {
-        return $this->belongsTo(RPGSession::class);
+        return $this->belongsTo(RpgSession::class, 'session_id');
     }
 }

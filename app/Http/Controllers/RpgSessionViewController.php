@@ -1,82 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Helpers\ResponseHelper;
-use App\Http\Requests\StoreRpgSessionRequest;
-use App\Http\Requests\UpdateRpgSessionRequest;
-use App\Http\Resources\RpgSessionResource;
 use App\Services\RpgSessionService;
-use Illuminate\Http\JsonResponse;
 
-class RpgSessionController extends Controller
+class RpgSessionViewController extends Controller
 {
-    protected RpgSessionService $rpgSessionService;
+    protected $rpgSessionService;
 
     public function __construct(RpgSessionService $rpgSessionService)
     {
         $this->rpgSessionService = $rpgSessionService;
     }
 
-    public function index(): JsonResponse
+    public function index()
     {
         $sessions = $this->rpgSessionService->getAllSessions();
 
-        return response()->json(ResponseHelper::successResponse(
-            'Listagem de sessões obtida com sucesso!',
-            [RpgSessionResource::$sessionsLabel => RpgSessionResource::collection($sessions)]
-        ));
+        return view('sessions.index', [
+            'sessions' => $sessions,
+        ]);
     }
 
-    public function show(int $id): JsonResponse
+    public function create()
+    {
+        return view('sessions.create');
+    }
+
+    public function edit($id)
     {
         $session = $this->rpgSessionService->getSessionById($id);
 
-        if (!$session) {
-            return ResponseHelper::errorResponse('Sessão não encontrada.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Detalhes da sessão obtidos com sucesso!',
-            [RpgSessionResource::$sessionLabel => new RpgSessionResource($session)]
-        ));
+        return view('sessions.edit', [
+            'session' => $session,
+        ]);
     }
 
-    public function store(StoreRpgSessionRequest $request): JsonResponse
+    public function details($id)
     {
-        $session = $this->rpgSessionService->createSession($request->validated());
+        $session = $this->rpgSessionService->getSessionById($id);        
 
-        return response()->json(ResponseHelper::successResponse(
-            'Sessão criada com sucesso!',
-            [RpgSessionResource::$sessionLabel => new RpgSessionResource($session)]
-        ), 201);
-    }
-
-    public function update(UpdateRpgSessionRequest $request, int $id): JsonResponse
-    {
-        $session = $this->rpgSessionService->updateSession($id, $request->validated());
-
-        if (!$session) {
-            return ResponseHelper::errorResponse('Sessão não encontrada.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Sessão atualizada com sucesso!',
-            [RpgSessionResource::$sessionLabel => new RpgSessionResource($session)]
-        ));
-    }
-
-    public function destroy(int $id): JsonResponse
-    {
-        $session = $this->rpgSessionService->deleteSession($id);
-
-        if (!$session) {
-            return ResponseHelper::errorResponse('Sessão não encontrada.', 404);
-        }
-
-        return response()->json(ResponseHelper::successResponse(
-            'Sessão excluída com sucesso!'
-        ), 200);
+        return view('sessions.details', [
+            'session' => $session,
+        ]);
     }
 }
