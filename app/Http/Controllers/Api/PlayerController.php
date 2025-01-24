@@ -28,8 +28,8 @@ class PlayerController extends Controller
             [PlayerResource::$playersLabel => PlayerResource::collection($players)]
         ));
     }
-    
-    public function show($id): JsonResponse
+
+    public function show(int $id): JsonResponse
     {
         $player = $this->playerService->getPlayerById($id);
 
@@ -49,30 +49,34 @@ class PlayerController extends Controller
 
         return response()->json(ResponseHelper::successResponse(
             'Jogador criado com sucesso!',
-            [PlayerResource::$playerLabel => new PlayerResource($player)]
+            [PlayerResource::$playerLabel  => new PlayerResource($player)]
         ), 201);
     }
 
-    public function update(UpdatePlayerRequest $request, string $id): JsonResponse
+    public function update(UpdatePlayerRequest $request, int $id): JsonResponse
     {
         $player = $this->playerService->updatePlayer($id, $request->validated());
-        dd($player);
+
         if (!$player) {
             return ResponseHelper::errorResponse('Jogador não encontrado.', 404);
         }
 
         return response()->json(ResponseHelper::successResponse(
             'Jogador atualizado com sucesso!',
-            [PlayerResource::$playerLabel => new PlayerResource($player)]
+            [PlayerResource::$playerLabel  => new PlayerResource($player)]
         ));
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $this->playerService->deletePlayer($id);
+        $deleted = $this->playerService->deletePlayer($id);
+
+        if (!$deleted) {
+            return ResponseHelper::errorResponse('Jogador não encontrado.', 404);
+        }
 
         return response()->json(ResponseHelper::successResponse(
-            'Jogador excluído com sucesso!'
-        ), 200);
+            'Jogador excluído com sucesso!' 
+        ));
     }
 }

@@ -22,7 +22,7 @@ class ResponseHelper
     public static function errorResponse(string $message, int $statusCode = 400): JsonResponse
     {
         return response()->json([
-            'error' => $message
+            'message' => $message
         ], $statusCode);
     }
 }
