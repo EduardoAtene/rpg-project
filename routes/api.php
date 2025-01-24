@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\GuildSimulateController;
 use App\Http\Controllers\Api\PlayerClassController;
 use App\Http\Controllers\Api\PlayerController;
+use App\Http\Controllers\Api\PlayerSessionController;
 use App\Http\Controllers\Api\RpgSessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +29,10 @@ Route::prefix('sessions')->group(function () {
     Route::post('/', [RpgSessionController::class, 'store'])->name('sessions.store');
     Route::put('/{id}', [RpgSessionController::class, 'update'])->name('sessions.update');
     Route::delete('/{id}', [RpgSessionController::class, 'destroy'])->name('sessions.destroy');
+
+    Route::post('/{id}/players', [PlayerSessionController::class, 'sessions.associate.players']);
+
 });
+
+// Route::post('/simulate-guilds', [GuildSimulateController::class, 'simulate']); pensado endpoitn para simulação
+// Route::post('/simulate-guilds/confirm', [GuildSimulateController::class, 'simulate']); pensado endpoitn para efetivação da simulação de guilda e inicio da sessão

@@ -4,11 +4,12 @@ namespace App\Providers;
 
 use App\Interfaces\PlayerClassInterface;
 use App\Interfaces\PlayerInterface;
+use App\Interfaces\PlayerSessionInterface;
 use App\Interfaces\RpgSessionInterface;
-use App\Models\PlayerClass;
 use App\Observers\RpgSessionObserver;
 use App\Repositories\PlayerClassRepository;
 use App\Repositories\PlayerRepository;
+use App\Repositories\PlayerSessionRepository;
 use App\Repositories\RpgSessionRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(PlayerInterface::class, PlayerRepository::class);
         $this->app->bind(PlayerClassInterface::class, PlayerClassRepository::class);
+        $this->app->bind(PlayerSessionInterface::class, PlayerSessionRepository::class);
         $this->app->bind(RpgSessionInterface::class, RpgSessionRepository::class);
     }
 
