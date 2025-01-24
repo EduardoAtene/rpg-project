@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssociatePlayerSessionRequest;
 use App\Http\Requests\FilterPlayersSessionRequest;
+use App\Http\Requests\UnassociatePlayerSessionRequest;
 use App\Http\Resources\PlayerSessionResource;
 use App\Models\PlayerSession;
 use App\Services\PlayerSessionService;
@@ -30,6 +32,26 @@ class PlayerSessionController extends Controller
                 [PlayerSessionResource::$playersAssociatedLabel => $request->get('associated') == 1,
                 PlayerSessionResource::$playerSessionLabel => PlayerSessionResource::collection($playerSessions)]
             )
+        );
+    }
+
+    public function associate(AssociatePlayerSessionRequest $request, int $id): JsonResponse
+    {
+        $validated = $request->validated();
+        $this->playerSessionService->associatePlayersToSession($id, $validated['player_ids']);
+
+        return response()->json(
+            ResponseHelper::successResponse('Jogadores associados à sessão com sucesso!')
+        );
+    }
+
+    public function unassociate(UnassociatePlayerSessionRequest $request, int $id): JsonResponse
+    {
+        $validated = $request->validated();
+        $this->playerSessionService->unassociatePlayersFromSession($id, $validated['player_ids']);
+
+        return response()->json(
+            ResponseHelper::successResponse('Jogadores inativados da sessão com sucesso!')
         );
     }
 }
