@@ -20,7 +20,7 @@ class RpgSessionService
 
     public function getSessionById(int $id)
     {
-        return $this->rpgSessionRepository->findById($id);
+        return $this->rpgSessionRepository->getById($id);
     }
 
     public function createSession(array $data)
@@ -35,6 +35,6 @@ class RpgSessionService
 
     public function deleteSession(int $id)
     {
-        $this->rpgSessionRepository->delete($id);
+        return $this->rpgSessionRepository->delete($id);
     }
 }

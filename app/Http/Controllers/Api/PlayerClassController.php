@@ -10,7 +10,7 @@ use App\Http\Resources\PlayerResource;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 
-class PlayerController extends Controller
+class PlayerClassController extends Controller
 {
     protected PlayerService $playerService;
 
