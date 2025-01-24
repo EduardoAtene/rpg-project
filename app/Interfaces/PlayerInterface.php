@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Interfaces;
 
 interface PlayerInterface
 {
-    public function index();
-    public function store($data);
-    public function show($id);
-    public function update($data, $id);
-    public function destroy($id);
+    public function getAll();
+    public function getById($id);
+    public function create(array $data);
+    public function update($id, array $data);
+    public function delete($id);
 }

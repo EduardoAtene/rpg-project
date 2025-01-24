@@ -16,3 +16,4 @@ Route::get('/players/{id}/edit', [PlayerViewController::class, 'edit']);
 Route::get('/sessions', [RpgSessionViewController::class, 'index']);
 Route::get('/sessions/create', [RpgSessionViewController::class, 'create']);
 Route::get('/sessions/{id}/edit', [RpgSessionViewController::class, 'edit']);
+Route::get('sessions/{id}/details', [RpgSessionViewController::class, 'details']);

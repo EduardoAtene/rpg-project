@@ -22,4 +22,8 @@ class RpgSession extends Model
     protected $attributes = [
         'status' => 'waiting',
     ];
+
+    protected $casts = [
+        'date_session' => 'datetime',
+    ];
 }

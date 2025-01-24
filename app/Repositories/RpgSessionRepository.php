@@ -7,31 +7,49 @@ use App\Models\RpgSession;
 
 class RpgSessionRepository implements RpgSessionInterface
 {
+    protected RpgSession $rpgSessionModel;
+
+    public function __construct(RpgSession $rpgSessionModel)
+    {
+        $this->rpgSessionModel = $rpgSessionModel;
+    }
+
     public function getAll()
     {
-        return RpgSession::all();
+        return $this->rpgSessionModel->all();
     }
 
-    public function findById($id)
+    public function getById($id)
     {
-        return RpgSession::findOrFail($id);
+        return $this->rpgSessionModel->find($id);
     }
 
-    public function create(array $data)
+    public function create($data)
     {
-        return RpgSession::create($data);
+        return $this->rpgSessionModel->create($data);
     }
 
     public function update($id, array $data)
     {
-        $session = RpgSession::findOrFail($id);
+        $session = $this->getById($id);
+        if (!$session) {
+            return null;
+        }
+
         $session->update($data);
+
         return $session;
     }
 
     public function delete($id)
     {
-        $session = RpgSession::findOrFail($id);
+        $session = $this->getById($id);
+        if (!$session) {
+            return null;
+        }
+
         $session->delete();
+
+        return $session;
     }
 }

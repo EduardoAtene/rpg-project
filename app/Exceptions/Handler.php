@@ -2,37 +2,43 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\ResponseHelper;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    protected $dontReport = [];
-
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
-
-    public function report(Throwable $exception): void
+    public function render($request, Throwable $exception): JsonResponse
     {
-        parent::report($exception);
-    }
+        if ($exception instanceof ModelNotFoundException) {
+            return ResponseHelper::errorResponse('Recurso não encontrado.', 404);
+        }
 
-    public function render($request, Throwable $exception)
-    {
-        // Verifica se o erro é de validação
+        if ($exception instanceof NotFoundHttpException) {
+            return ResponseHelper::errorResponse('Endpoint não encontrado.', 404);
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return ResponseHelper::errorResponse('Método HTTP não permitido para esta rota.', 405);
+        }
+
         if ($exception instanceof ValidationException) {
             return response()->json([
-                'success' => false,
-                'message' => 'Erro de validação',
-                'errors' => $exception->errors(),
+                'message' => 'Erro de validação.',
+                'details' => $exception->errors(),
             ], 422);
         }
 
-        // Para outros erros, retorna uma resposta JSON genérica
-        return parent::render($request, $exception);
+        if ($exception instanceof HttpException) {
+            return ResponseHelper::errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        return ResponseHelper::errorResponse('Erro interno no servidor.', 500);
     }
 }

@@ -6,7 +6,7 @@ use App\Interfaces\PlayerInterface;
 
 class PlayerService
 {
-    protected $playerRepository;
+    protected PlayerInterface $playerRepository;
 
     public function __construct(PlayerInterface $playerRepository)
     {
@@ -15,26 +15,26 @@ class PlayerService
 
     public function getAllPlayers()
     {
-        return $this->playerRepository->index();
-    }
-
-    public function createPlayer($data)
-    {
-        return $this->playerRepository->store($data);
+        return $this->playerRepository->getAll();
     }
 
     public function getPlayerById($id)
     {
-        return $this->playerRepository->show($id);
+        return $this->playerRepository->getById($id);
     }
 
-    public function updatePlayer($data, $id)
+    public function createPlayer(array $data)
     {
-        return $this->playerRepository->update($data, $id);
+        return $this->playerRepository->create($data);
+    }
+
+    public function updatePlayer($id, array $data)
+    {
+        return $this->playerRepository->update($id, $data);
     }
 
     public function deletePlayer($id)
     {
-        return $this->playerRepository->destroy($id);
+        return $this->playerRepository->delete($id);
     }
 }

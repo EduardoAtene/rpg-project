@@ -7,6 +7,17 @@
         </tr>
     </thead>
     <tbody>
-        {{ $slot }}
+        @foreach ($rows as $row)
+            <tr 
+                @if(isset($row['onclick']) && $row['onclick']) 
+                    style="cursor: pointer;" 
+                    onclick="{{ $row['onclick'] }}"
+                @endif
+            >
+                @foreach ($row['data'] as $cell)
+                    <td class="text-center py-2">{!! $cell !!}</td>
+                @endforeach
+            </tr>
+        @endforeach
     </tbody>
 </table>
