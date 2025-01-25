@@ -4,17 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GuildSimulatorSessionRequest;
+use App\Services\GuildSimulateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GuildSimulateController extends Controller
 {
+    private GuildSimulateService $guildSimulateService;
+
+    public function __construct(GuildSimulateService $guildSimulateService)
+    {
+        $this->guildSimulateService = $guildSimulateService;
+    }
+
     public function simulate(GuildSimulatorSessionRequest $request): JsonResponse
     {
 
-        $validatedData = $request->validated();
+        $simulateValidate = $request->validated();
 
-
+        $this->guildSimulateService->simulate($simulateValidate);
+        
         $response = [
             "status" => "success",
             "message" => "Simulação de guildas concluída com sucesso.",

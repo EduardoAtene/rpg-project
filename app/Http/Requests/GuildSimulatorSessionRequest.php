@@ -18,7 +18,7 @@ class GuildSimulatorSessionRequest extends FormRequest
     {
         return [
             'session_id' => 'required|integer',
-            'qnt_guilds' => 'required|integer|min:1',
+            'qnt_guilds' => 'required|integer|min:3',
             'guilds' => 'required|array|min:1',
             'guilds.*.name' => 'required|string|max:255',
             'guilds.*.player_count' => 'required|integer|min:3',
@@ -32,7 +32,7 @@ class GuildSimulatorSessionRequest extends FormRequest
             'session_id.integer' => 'O campo session_id deve ser um número inteiro.',
             'qnt_guilds.required' => 'O campo qnt_guilds é obrigatório.',
             'qnt_guilds.integer' => 'O campo qnt_guilds deve ser um número inteiro.',
-            'qnt_guilds.min' => 'O campo qnt_guilds deve ser pelo menos 1.',
+            'qnt_guilds.min' => 'O campo qnt_guilds deve ser pelo menos 3.',
             'guilds.required' => 'A lista de guildas (guilds) é obrigatória.',
             'guilds.array' => 'O campo guilds deve ser um array.',
             'guilds.min' => 'O campo guilds deve conter pelo menos uma guilda.',
