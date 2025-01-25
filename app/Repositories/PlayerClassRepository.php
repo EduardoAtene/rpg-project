@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\PlayerClassInterface;
+use App\Interfaces\Repositories\PlayerClassInterface;
 use App\Models\PlayerClass;
 
 class PlayerClassRepository implements PlayerClassInterface

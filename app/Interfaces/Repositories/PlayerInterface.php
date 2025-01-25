@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Interfaces\Repositories;
 
-interface RpgSessionInterface
+interface PlayerInterface
 {
     public function getAll();
     public function getById($id);

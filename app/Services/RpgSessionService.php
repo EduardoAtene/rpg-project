@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\RpgSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
 
 class RpgSessionService
 {

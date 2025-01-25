@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Interfaces\PlayerClassInterface;
-use App\Interfaces\PlayerInterface;
-use App\Interfaces\PlayerSessionInterface;
-use App\Interfaces\RpgSessionInterface;
+use App\Interfaces\Repositories\PlayerClassInterface;
+use App\Interfaces\Repositories\PlayerInterface;
+use App\Interfaces\Repositories\PlayerSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
 use App\Observers\RpgSessionObserver;
 use App\Repositories\PlayerClassRepository;
 use App\Repositories\PlayerRepository;

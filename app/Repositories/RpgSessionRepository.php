@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\RpgSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
 use App\Models\RpgSession;
 
 class RpgSessionRepository implements RpgSessionInterface

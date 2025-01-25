@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Exceptions\RpgSessionNotFoundException;
-use App\Interfaces\PlayerSessionInterface;
-use App\Interfaces\RpgSessionInterface;
-use Exception;
+use App\Interfaces\Repositories\PlayerSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
 
 class PlayerSessionService
 {

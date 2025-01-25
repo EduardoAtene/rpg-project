@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Exceptions\RpgSessionNotFoundException;
 use App\Exceptions\ValidateException;
-use App\Interfaces\RpgSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
+
+;
 use App\Repositories\PlayerSessionRepository;
 
 class GuildSimulateService
