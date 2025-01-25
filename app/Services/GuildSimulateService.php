@@ -3,22 +3,33 @@
 namespace App\Services;
 
 use App\Exceptions\RpgSessionNotFoundException;
+use App\Exceptions\ValidateException;
 use App\Interfaces\RpgSessionInterface;
+use App\Repositories\PlayerSessionRepository;
 
 class GuildSimulateService
 {
     protected RpgSessionInterface $rpgSessionRepository;
+    protected PlayerSessionRepository $playerSessionRepository;
 
-    public function __construct(RpgSessionInterface $rpgSessionRepository)
+    public function __construct(
+        RpgSessionInterface $rpgSessionRepository,
+        PlayerSessionRepository $playerSessionRepository
+    )
     {
         $this->rpgSessionRepository = $rpgSessionRepository;
+        $this->playerSessionRepository = $playerSessionRepository;
     }
 
     public function simulate(array $validatedData): array
     {
-        $this->validateSessionExists($validatedData['session_id']);
+        $rpgSession = $this->getRpgSession($validatedData['session_id']);
 
+        $this->validateStatusRpgSession($rpgSession);
 
+        $playerAssociate = $this->playerSessionRepository->getAllPlayersAssociateSession($rpgSession->id);
+    
+        $this->validateRuleGuilds($playerAssociate);
         $guilds = $validatedData['guilds'];
         $data = [];
 
@@ -64,10 +75,34 @@ class GuildSimulateService
         ];
     }
 
-    private function validateSessionExists(int $sessionId): void
+    private function getRpgSession(int $sessionId): object
     {
-        if (!$this->rpgSessionRepository->getById($sessionId)) {
-            throw new RpgSessionNotFoundException("A sessão com o ID {$sessionId} não foi encontrada.");
+        $session = $this->rpgSessionRepository->getById($sessionId);
+        if (!$session) {
+            throw new RpgSessionNotFoundException("A sessão de rpg  com o ID {$sessionId} não foi encontrada.");
+        }
+
+        return $session;
+    }
+
+    private function validateStatusRpgSession(object $rpgSession): void
+    {
+        if ($rpgSession->status === 'waiting') {
+            throw new ValidateException("A sessão de rpg com o ID {$rpgSession->id} ainda nao iniciou.");
+        }
+
+        if ($rpgSession->status === 'closed') {
+            throw new ValidateException("A sessão de rpg com o ID {$rpgSession->id} ja foi fechada.");
+        }
+    }
+
+    private function validateRuleGuilds(object $playerSession): void
+    {
+        foreach ($playerSession as $player) {
+            if ($player->status == 'attend') {
+                throw new ValidateException("O jogador {$player->id} nao esta presente.");
+            }
+            
         }
     }
 }
