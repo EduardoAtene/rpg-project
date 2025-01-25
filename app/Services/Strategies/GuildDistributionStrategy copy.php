@@ -60,20 +60,5 @@ class GuildDistributionStrategy implements GuildDistributionStrategyInterface
 
             $guild['total_xp'] = array_sum(array_column($guild['players'], 'xp'));
         }
-        $remainingPlayers = array_merge($suportGroup, $warriorGroup, $rangedGroup);
-        $this->balanceXp($remainingPlayers, $guilds);
-    }
-
-    private function balanceXp(array $players, array &$guilds): void
-    {
-        // Ordernar primeiro para dps pegar
-        usort($players, fn($a, $b) => $b['xp'] <=> $a['xp']);
-
-        foreach ($players as $player) {
-            usort($guilds, fn($a, $b) => ($a['total_xp'] ?? 0) <=> ($b['total_xp'] ?? 0));
-
-            $guilds[0]['players'][] = $player;
-            $guilds[0]['total_xp'] = array_sum(array_column($guilds[0]['players'], 'xp'));
-        }
     }
 }
