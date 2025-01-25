@@ -15,7 +15,8 @@ class GuildSimulatorSessionResource extends JsonResource
         return [
                 'guild_name' => $data['guild_name'],
                 'players' => $this->transformPlayers($data['players']),
-                'total_xp' => $data['total_xp'] ?? 0,
+                'total_xp' => $data['total_xp'],
+                'missing_classes' => $data['missing_classes']
             ];
     }
 
@@ -25,7 +26,10 @@ class GuildSimulatorSessionResource extends JsonResource
             return [
                 'name' => $player['name'],
                 'xp' => $player['xp'],
-                'class' => $player['player_class_id'],
+                'class' => [
+                    'id' => $player['class']['id'],
+                    'name' => $player['class']['name'],
+                ],
             ];
         });
     }

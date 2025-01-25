@@ -48,7 +48,7 @@ class PlayerSessionRepository implements PlayerSessionInterface
 
     public function getAllPlayersAssociateSession(int $sessionId)
     {
-        return $this->playerModel->whereHas('sessions', function ($query) use ($sessionId) {
+        return $this->playerModel->with('class')->whereHas('sessions', function ($query) use ($sessionId) {
             $query->where('session_id', $sessionId)
                   ->where('player_session.status', 'attend');
         })->get();
