@@ -18,11 +18,25 @@ class GuildSimulatorSessionRequest extends FormRequest
     {
         return [
             'session_id' => 'required|integer',
-            'qnt_guilds' => 'required|integer|min:3',
+            'qnt_guilds' => 'required|integer',
             'guilds' => 'required|array|min:1',
             'guilds.*.name' => 'required|string|max:255',
             'guilds.*.player_count' => 'required|integer|min:3',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $guilds = $this->input('guilds');
+
+            if (is_array($guilds) && count($guilds) !==  $this->input('qnt_guilds')) {
+                $validator->errors()->add(
+                    'qnt_guilds',
+                    'O valor de qnt_guilds deve ser igual ao número de guilds fornecidas.'
+                );
+            }
+        });
     }
 
     public function messages(): array

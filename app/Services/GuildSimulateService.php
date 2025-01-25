@@ -29,7 +29,8 @@ class GuildSimulateService
 
         $playerAssociate = $this->playerSessionRepository->getAllPlayersAssociateSession($rpgSession->id);
     
-        $this->validateRuleGuilds($playerAssociate);
+        $this->validateRuleGuilds($validatedData,$playerAssociate);
+
         $guilds = $validatedData['guilds'];
         $data = [];
 
@@ -96,13 +97,36 @@ class GuildSimulateService
         }
     }
 
-    private function validateRuleGuilds(object $playerSession): void
+    private function validateRuleGuilds(array $validatedData, object $playerSession): void
     {
+
+        $this->validateQntGuildsByQntPlayers($validatedData, $playerSession->count());
+
         foreach ($playerSession as $player) {
-            if ($player->status == 'attend') {
+            if ($player->status !== 'attend') {
                 throw new ValidateException("O jogador {$player->id} nao esta presente.");
             }
             
         }
+    }
+
+    private function validateQntGuildsByQntPlayers(array $validatedData, int $qntPlayers): void
+    {
+        if ($validatedData['qnt_guilds'] > $qntPlayers) {
+            throw new ValidateException("O número de guildas deve ser menor ao número de jogadores presentes.");
+        }
+    
+        $qntMinGuilds = intdiv($qntPlayers, $validatedData['qnt_guilds']);
+        if ($qntMinGuilds < 3) {
+            throw new ValidateException("Cada guilda precisa de pelo menos 3 jogadores. Quantidade mínima de guildas que é possível é de {$qntMinGuilds} guildas.");
+        }
+
+        $totalPlayerCount = array_sum(array_column($validatedData['guilds'], 'player_count'));
+
+        if ($totalPlayerCount > $qntPlayers) {
+            throw new ValidateException("A soma de jogadores em todas as guildas que é {$totalPlayerCount} não pode exceder o número de jogadores disponíveis {$qntPlayers}.");
+        }
+
+
     }
 }
