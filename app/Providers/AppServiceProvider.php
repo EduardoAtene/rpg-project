@@ -6,11 +6,13 @@ use App\Interfaces\Repositories\PlayerClassInterface;
 use App\Interfaces\Repositories\PlayerInterface;
 use App\Interfaces\Repositories\PlayerSessionInterface;
 use App\Interfaces\Repositories\RpgSessionInterface;
+use App\Interfaces\Strategies\GuildDistributionStrategyInterface;
 use App\Observers\RpgSessionObserver;
 use App\Repositories\PlayerClassRepository;
 use App\Repositories\PlayerRepository;
 use App\Repositories\PlayerSessionRepository;
 use App\Repositories\RpgSessionRepository;
+use App\Services\Strategies\GuildDistributionStrategy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PlayerClassInterface::class, PlayerClassRepository::class);
         $this->app->bind(PlayerSessionInterface::class, PlayerSessionRepository::class);
         $this->app->bind(RpgSessionInterface::class, RpgSessionRepository::class);
+        $this->app->bind(GuildDistributionStrategyInterface::class, GuildDistributionStrategy::class);
     }
 
     /**
