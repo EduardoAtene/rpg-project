@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseHelper;
@@ -74,5 +74,21 @@ class RpgSessionController extends Controller
         return response()->json(ResponseHelper::successResponse(
             'Sessão de RPG excluída com sucesso!'
         ), 200);
+    }
+
+    public function init(int $int): JsonResponse
+    {
+        return response()->json(ResponseHelper::successResponse(
+            'Sessão de RPG iniciada com sucesso!',
+            [RpgSessionResource::$sessionLabel => new RpgSessionResource($this->rpgSessionService->initSession($int))]
+        ));
+    }
+
+    public function close(int $int): JsonResponse
+    {
+        return response()->json(ResponseHelper::successResponse(
+            'Sessão de RPG foi fechada com sucesso!',
+            [RpgSessionResource::$sessionLabel => new RpgSessionResource($this->rpgSessionService->closeSession($int))]
+        ));
     }
 }

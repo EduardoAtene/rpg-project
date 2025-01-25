@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\PlayerInterface;
+use App\Interfaces\Repositories\PlayerInterface;
 
 class PlayerService
 {

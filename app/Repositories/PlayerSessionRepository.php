@@ -2,24 +2,28 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\PlayerSessionInterface;
+use App\Interfaces\Repositories\PlayerSessionInterface;
 use App\Models\Player;
-use App\Models\PlayerClass;
 use App\Models\PlayerSession;
-use App\Services\PlayerService;
 
 class PlayerSessionRepository implements PlayerSessionInterface
 {
+    protected Player $playerModel;
     protected PlayerSession $playerSessionModel;
 
-    public function __construct(PlayerSession $playerSessionModel)
+    public function __construct(
+        PlayerSession $playerSessionModel,
+        Player $playerModel
+        )
     {
         $this->playerSessionModel = $playerSessionModel;
+        $this->playerModel = $playerModel;
     }
 
     public function filterPlayers(int $sessionId, array $filters)
     {
-        $query = Player::query();
+        $query = $this->playerModel->query();
+    
         $this->applySessionFilter($query, $sessionId, $filters['associated']);
 
         return $query->get();
@@ -28,7 +32,7 @@ class PlayerSessionRepository implements PlayerSessionInterface
     public function associatePlayers(int $sessionId, array $playerIds)
     {
         foreach ($playerIds as $playerId) {
-            PlayerSession::updateOrCreate(
+            $this->playerSessionModel->updateOrCreate(
                 ['player_id' => $playerId, 'session_id' => $sessionId],
                 ['status' => 'attend']
             );
@@ -37,9 +41,17 @@ class PlayerSessionRepository implements PlayerSessionInterface
 
     public function unassociatePlayers(int $sessionId, array $playerIds)
     {
-        PlayerSession::where('session_id', $sessionId)
+        $this->playerSessionModel->where('session_id', $sessionId)
             ->whereIn('player_id', $playerIds)
             ->delete(['status' => 'missing']);
+    }
+
+    public function getAllPlayersAssociateSession(int $sessionId)
+    {
+        return $this->playerModel->whereHas('sessions', function ($query) use ($sessionId) {
+            $query->where('session_id', $sessionId)
+                  ->where('player_session.status', 'attend');
+        })->get();
     }
 
     private function applySessionFilter($query, int $sessionId, bool $associated)

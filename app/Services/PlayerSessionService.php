@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Interfaces\PlayerSessionInterface;
-use App\Interfaces\RpgSessionInterface;
-use Exception;
+use App\Exceptions\RpgSessionNotFoundException;
+use App\Interfaces\Repositories\PlayerSessionInterface;
+use App\Interfaces\Repositories\RpgSessionInterface;
 
 class PlayerSessionService
 {
@@ -21,11 +21,7 @@ class PlayerSessionService
 
     public function filterPlayersBySession(int $sessionId, array $filters)
     {
-        $session = $this->rpgSessionRepository->getById($sessionId);
-
-        if (!$session) {
-            throw new Exception('Sessão não encontrada.', 404);
-        }
+        $this->validateSessionExists($sessionId);
 
         return $this->playerSessionRepository->filterPlayers($sessionId, $filters);
     }
@@ -33,23 +29,22 @@ class PlayerSessionService
 
     public function associatePlayersToSession(int $sessionId, array $playerIds)
     {
-        $session = $this->rpgSessionRepository->getById($sessionId);
-
-        if (!$session) {
-            throw new Exception('Sessão não encontrada.', 404);
-        }
+        $this->validateSessionExists($sessionId);
 
         $this->playerSessionRepository->associatePlayers($sessionId, $playerIds);
     }
 
     public function unassociatePlayersFromSession(int $sessionId, array $playerIds)
     {
-        $session = $this->rpgSessionRepository->getById($sessionId);
-
-        if (!$session) {
-            throw new Exception('Sessão não encontrada.', 404);
-        }
+        $this->validateSessionExists($sessionId);
 
         $this->playerSessionRepository->unassociatePlayers($sessionId, $playerIds);
+    }
+
+    private function validateSessionExists(int $sessionId): void
+    {
+        if (!$this->rpgSessionRepository->getById($sessionId)) {
+            throw new RpgSessionNotFoundException("A sessão do rpg com o ID {$sessionId} não foi encontrada.");
+        }
     }
 }
