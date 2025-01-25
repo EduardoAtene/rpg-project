@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
@@ -8,7 +8,6 @@ use App\Http\Requests\AssociatePlayerSessionRequest;
 use App\Http\Requests\FilterPlayersSessionRequest;
 use App\Http\Requests\UnassociatePlayerSessionRequest;
 use App\Http\Resources\PlayerSessionResource;
-use App\Models\PlayerSession;
 use App\Services\PlayerSessionService;
 use Illuminate\Http\JsonResponse;
 
