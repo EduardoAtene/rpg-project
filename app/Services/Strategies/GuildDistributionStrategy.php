@@ -15,59 +15,96 @@ class GuildDistributionStrategy implements GuildDistributionStrategyInterface
             4 => 'Clérigo',
         ];
 
-        $playersGroupedByClass = collect($players)->groupBy(fn($player) => $player['class']['id'])->toArray();
+        $playersGroupedByClass = $this->groupPlayersByClass($players);
 
-        $suportGroup = $playersGroupedByClass[4] ?? [];
-        $warriorGroup = $playersGroupedByClass[1] ?? [];
-        $rangedGroup = array_merge(
+        $suportGroup = $this->selectionSortPlayersByXp($playersGroupedByClass[4] ?? []);
+        $warriorGroup = $this->selectionSortPlayersByXp($playersGroupedByClass[1] ?? []);
+        $rangedGroup = $this->selectionSortPlayersByXp(array_merge(
             $playersGroupedByClass[2] ?? [],
             $playersGroupedByClass[3] ?? []
-        );
+        ));
 
         foreach ($guilds as &$guild) {
             $guild['players'] = [];
             $guild['missing_classes'] = [];
 
-            if (!empty($suportGroup)) {
-                $guild['players'][] = array_shift($suportGroup);
-            } else {
-                $guild['missing_classes'][] = $classes[4];
-            }
+            $this->distributeByClass($suportGroup, $guild, $classes[4], $guild['missing_classes']);
+            $this->distributeByClass($warriorGroup, $guild, $classes[1], $guild['missing_classes']);
+            $this->distributeByClass($rangedGroup, $guild, 'Falta alguem de Distância (' . $classes[2] . ' ou ' . $classes[3] . ')', $guild['missing_classes']);
+        }
 
-            if (!empty($warriorGroup)) {
-                $guild['players'][] = array_shift($warriorGroup);
-            } else {
-                $guild['missing_classes'][] = $classes[1];
-            }
-
-            if (!empty($rangedGroup)) {
-                $guild['players'][] = array_shift($rangedGroup);
-            } else {
-                $guild['missing_classes'][] = 'Ataque à Distância (' . $classes[2] . ' ou ' . $classes[3] . ')';
-            }
-
-            while (count($guild['players']) < $guild['qnt_players']) {
-                if (!empty($suportGroup)) {
-                    $guild['players'][] = array_shift($suportGroup);
-                } elseif (!empty($warriorGroup)) {
-                    $guild['players'][] = array_shift($warriorGroup);
-                } elseif (!empty($rangedGroup)) {
-                    $guild['players'][] = array_shift($rangedGroup);
-                } else {
-                    break;
-                }
-            }
-
+        foreach ($guilds as &$guild) {
+            $this->distributePlayersToGuild($suportGroup, $warriorGroup, $rangedGroup, $guild);
             $guild['total_xp'] = array_sum(array_column($guild['players'], 'xp'));
         }
+
         $remainingPlayers = array_merge($suportGroup, $warriorGroup, $rangedGroup);
         $this->balanceXp($remainingPlayers, $guilds);
     }
 
+    private function groupPlayersByClass(array $players): array
+    {
+        return collect($players)->groupBy(fn($player) => $player['class']['id'])->toArray();
+    }
+
+    private function selectionSortPlayersByXp(array $players): array
+    {
+        $count = count($players);
+        for ($i = 0; $i < $count - 1; $i++) {
+            $minIndex = $i;
+            for ($j = $i + 1; $j < $count; $j++) {
+                if ($players[$j]['xp'] < $players[$minIndex]['xp']) {
+                    $minIndex = $j;
+                }
+            }
+
+            if ($minIndex !== $i) {
+                $temp = $players[$i];
+                $players[$i] = $players[$minIndex];
+                $players[$minIndex] = $temp;
+            }
+        }
+
+        return $players;
+    }
+
+    private function distributeByClass(array &$group, array &$guild, string $className, array &$missingClasses): void
+    {
+        if (!empty($group)) {
+            $guild['players'][] = array_shift($group);
+        } else {
+            $missingClasses[] = $className;
+        }
+    }
+
+    private function distributePlayersToGuild(array &$suportGroup, array &$warriorGroup, array &$rangedGroup, array &$guild): void
+    {
+        while (count($guild['players']) < $guild['qnt_players']) {
+            if (!empty($suportGroup)) {
+                $guild['players'][] = array_shift($suportGroup);
+
+                continue;
+            }
+    
+            if (!empty($warriorGroup)) {
+                $guild['players'][] = array_shift($warriorGroup);
+
+                continue;
+            }
+    
+            if (!empty($rangedGroup)) {
+                $guild['players'][] = array_shift($rangedGroup);
+
+                continue;
+            }
+    
+            return;
+        }
+    }
+
     private function balanceXp(array $players, array &$guilds): void
     {
-        // Ordernar primeiro para dps pegar
-        usort($players, fn($a, $b) => $b['xp'] <=> $a['xp']);
+        $players = $this->selectionSortPlayersByXp($players);
 
         foreach ($players as $player) {
             usort($guilds, fn($a, $b) => ($a['total_xp'] ?? 0) <=> ($b['total_xp'] ?? 0));
