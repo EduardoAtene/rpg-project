@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GuildSimulatorSessionRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GuildSimulateController extends Controller
 {
-    public function simulate(Request $request): JsonResponse
+    public function simulate(GuildSimulatorSessionRequest $request): JsonResponse
     {
-        // Corpo de exemplo para a resposta
+
+        $validatedData = $request->validated();
+
+
         $response = [
             "status" => "success",
             "message" => "Simulação de guildas concluída com sucesso.",

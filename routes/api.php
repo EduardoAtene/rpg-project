@@ -31,6 +31,8 @@ Route::prefix('sessions')->group(function () {
     Route::get('/{id}', [RpgSessionController::class, 'show'])->name('sessions.show');
     Route::post('/', [RpgSessionController::class, 'store'])->name('sessions.store');
     Route::put('/{id}', [RpgSessionController::class, 'update'])->name('sessions.update');
+    Route::put('/{id}/init', [RpgSessionController::class, 'init'])->name('sessions.init');
+    Route::put('/{id}/close', [RpgSessionController::class, 'close'])->name('sessions.close');
     Route::delete('/{id}', [RpgSessionController::class, 'destroy'])->name('sessions.destroy');
 
     Route::prefix('/{id}/players')->group(function () {

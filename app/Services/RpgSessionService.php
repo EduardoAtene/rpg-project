@@ -37,4 +37,22 @@ class RpgSessionService
     {
         return $this->rpgSessionRepository->delete($id);
     }
+
+    public function initSession(int $id)
+    {
+        $data = [
+            "status" => "in_progress"
+        ];
+
+        return $this->rpgSessionRepository->update($id, $data);
+    }
+
+    public function closeSession(int $id)
+    {
+        $data = [
+            "status" => "closed"
+        ];
+
+        return $this->rpgSessionRepository->update($id, $data);
+    }
 }
