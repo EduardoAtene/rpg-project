@@ -5,22 +5,23 @@ namespace App\Services;
 use App\Exceptions\RpgSessionNotFoundException;
 use App\Exceptions\ValidateException;
 use App\Interfaces\Repositories\RpgSessionInterface;
-
-;
-use App\Repositories\PlayerSessionRepository;
+use App\Interfaces\Repositories\PlayerSessionInterface;
+use App\Services\Validation\GuildValidationService;
 
 class GuildSimulateService
 {
     protected RpgSessionInterface $rpgSessionRepository;
-    protected PlayerSessionRepository $playerSessionRepository;
+    protected PlayerSessionInterface $playerSessionRepository;
+    protected GuildValidationService $guildValidationService;
 
     public function __construct(
         RpgSessionInterface $rpgSessionRepository,
-        PlayerSessionRepository $playerSessionRepository
-    )
-    {
+        PlayerSessionInterface $playerSessionRepository,
+        GuildValidationService $guildValidationService
+    ) {
         $this->rpgSessionRepository = $rpgSessionRepository;
         $this->playerSessionRepository = $playerSessionRepository;
+        $this->guildValidationService = $guildValidationService;
     }
 
     public function simulate(array $validatedData): array
@@ -30,59 +31,47 @@ class GuildSimulateService
         $this->validateStatusRpgSession($rpgSession);
 
         $playerAssociate = $this->playerSessionRepository->getAllPlayersAssociateSession($rpgSession->id);
-    
-        $this->validateRuleGuilds($validatedData,$playerAssociate);
+
+        $this->guildValidationService->validateQntGuildsByQntPlayers($validatedData, $playerAssociate->count());
+        $this->guildValidationService->validateStatusPlayers($playerAssociate);
 
         $guilds = $validatedData['guilds'];
-        $data = [];
-
-        foreach ($guilds as $guild) {
-            $players = [
-                [
-                    "id" => 1,
-                    "name" => "Jogador 1",
-                    "xp" => 120,
-                    "class" => "Guerreiro",
-                ],
-                [
-                    "id" => 2,
-                    "name" => "Jogador 2",
-                    "xp" => 80,
-                    "class" => "Mago",
-                ],
-            ];
-
-            $totalXp = array_sum(array_column($players, 'xp'));
-
-            $data[] = [
+        $data = array_map(function ($guild) {
+            return [
                 'guild_name' => $guild['name'],
-                'players' => $players,
-                'total_xp' => $totalXp,
+                'qnt_players' => $guild['player_count'],
+                'players' => [],
+                'total_xp' => 0,
             ];
+        }, $guilds);
+
+        $players = $playerAssociate->toArray();
+        $totalPlayers = count($players);
+        $currentPlayerIndex = 0;
+
+        foreach ($data as $key => $guild) {
+            $playerCount = $guild['qnt_players'];
+            $guildPlayers = array_slice($players, $currentPlayerIndex, $playerCount);
+            $data[$key]['players'] = $guildPlayers;
+    
+            $data[$key]['total_xp'] = array_sum(array_column($guildPlayers, 'xp'));
+    
+            $currentPlayerIndex += $playerCount;
         }
 
-        return [
-            'status' => 'success',
-            'message' => 'Simulação de guildas concluída com sucesso.',
-            'data' => $data,
-        ];
+        return $data;
     }
 
     public function confirm(array $validatedData): array
     {
-        //
-        return [
-            'status' => 'success',
-            'message' => 'Confirmação de guildas concluída com sucesso.',
-            'data' => $this->simulate($validatedData)['data'],
-        ];
+        return $this->simulate($validatedData);
     }
 
     private function getRpgSession(int $sessionId): object
     {
         $session = $this->rpgSessionRepository->getById($sessionId);
         if (!$session) {
-            throw new RpgSessionNotFoundException("A sessão de rpg  com o ID {$sessionId} não foi encontrada.");
+            throw new RpgSessionNotFoundException("A sessão de RPG com o ID {$sessionId} não foi encontrada.");
         }
 
         return $session;
@@ -91,44 +80,11 @@ class GuildSimulateService
     private function validateStatusRpgSession(object $rpgSession): void
     {
         if ($rpgSession->status === 'waiting') {
-            throw new ValidateException("A sessão de rpg com o ID {$rpgSession->id} ainda nao iniciou.");
+            throw new ValidateException("A sessão de RPG com o ID {$rpgSession->id} ainda não iniciou.");
         }
 
         if ($rpgSession->status === 'closed') {
-            throw new ValidateException("A sessão de rpg com o ID {$rpgSession->id} ja foi fechada.");
+            throw new ValidateException("A sessão de RPG com o ID {$rpgSession->id} já foi fechada.");
         }
-    }
-
-    private function validateRuleGuilds(array $validatedData, object $playerSession): void
-    {
-
-        $this->validateQntGuildsByQntPlayers($validatedData, $playerSession->count());
-
-        foreach ($playerSession as $player) {
-            if ($player->status !== 'attend') {
-                throw new ValidateException("O jogador {$player->id} nao esta presente.");
-            }
-            
-        }
-    }
-
-    private function validateQntGuildsByQntPlayers(array $validatedData, int $qntPlayers): void
-    {
-        if ($validatedData['qnt_guilds'] > $qntPlayers) {
-            throw new ValidateException("O número de guildas deve ser menor ao número de jogadores presentes.");
-        }
-    
-        $qntMinGuilds = intdiv($qntPlayers, $validatedData['qnt_guilds']);
-        if ($qntMinGuilds < 3) {
-            throw new ValidateException("Cada guilda precisa de pelo menos 3 jogadores. Quantidade mínima de guildas que é possível é de {$qntMinGuilds} guildas.");
-        }
-
-        $totalPlayerCount = array_sum(array_column($validatedData['guilds'], 'player_count'));
-
-        if ($totalPlayerCount > $qntPlayers) {
-            throw new ValidateException("A soma de jogadores em todas as guildas que é {$totalPlayerCount} não pode exceder o número de jogadores disponíveis {$qntPlayers}.");
-        }
-
-
     }
 }

@@ -8,11 +8,11 @@ class GuildValidationService
 {
     public function validateStatusPlayers($playerSession): void
     {
-        foreach ($playerSession as $player) {
-            if ($player->status !== 'attend') {
-                throw new ValidateException("O jogador {$player->id} não está presente.");
-            }
-        }
+        // foreach ($playerSession as $player) {
+            // if ($player->status !== 'attend') {
+            //     throw new ValidateException("O jogador {$player->id} não está presente.");
+            // }
+        // }
     }
 
     public function validateQntGuildsByQntPlayers(array $validatedData, int $qntPlayers): void
@@ -29,7 +29,7 @@ class GuildValidationService
         $totalPlayerCount = array_sum(array_column($validatedData['guilds'], 'player_count'));
 
         if ($totalPlayerCount > $qntPlayers) {
-            throw new ValidateException("A soma de jogadores em todas as guildas ({$totalPlayerCount}) não pode exceder o número de jogadores disponíveis ({$qntPlayers}).");
+            throw new ValidateException("A soma de jogadores em todas as guildas que é {$totalPlayerCount} não pode exceder o número de jogadores disponíveis {$qntPlayers}.");
         }
     }
 }
