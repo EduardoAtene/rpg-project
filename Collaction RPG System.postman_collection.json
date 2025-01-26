@@ -756,6 +756,78 @@
 			"description": "Responsável por criar um jogador"
 		},
 		{
+			"name": "Guilds",
+			"item": [
+				{
+					"name": "Get Guild BY Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/guilds/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"guilds",
+								"4"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Guilds By Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/guilds/sessions/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"guilds",
+								"sessions",
+								"3"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Simulate Guild",
 			"event": [
 				{
@@ -777,7 +849,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"session_id\":2,\n    \"qnt_guilds\": 1,\n    \"guilds\": [\n        {\n            \"name\": \"Guilda A\",\n            \"player_count\": 9\n        }\n    ]\n}",
+					"raw": "{\n    \"session_id\":7,\n    \"qnt_guilds\": 2,\n    \"guilds\": [\n        {\n            \"name\": \"Guilda A\",\n            \"player_count\": 8\n        },\n                {\n            \"name\": \"Guilda A\",\n            \"player_count\": 3\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
