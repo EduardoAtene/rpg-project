@@ -169,3 +169,43 @@ Da para ver no link tb, segue o link: [Wireframe](https://share.balsamiq.com/c/c
 
 ---
 
+
+## Regras de Negócio e Dúvidas
+
+### Fluxo de Criação de Players e Vinculação com Sessão
+
+**Dúvida Inicial:**
+- Como funcionaria o mecanismo do player e da sessão?
+  - O mesmo player, com sua classe e XP, poderia participar de outra sessão? Ou cada sessão exigiria o cadastro do player novamente?
+
+**Análise:**
+- Existiam duas abordagens:
+  1. **Cadastro Dependente de Sessão**:
+     - Cada player deveria ser vinculado obrigatoriamente a uma sessão. Caso desejasse participar de outra sessão, seria necessário recriar o player.
+  2. **Cadastro Independente de Sessão (Escolhida):**
+     - Players são cadastrados de forma independente, podendo ser vinculados a diferentes sessões.
+     - Essa abordagem permite maior flexibilidade, pois um player pode optar por participar apenas de determinadas aventuras.
+
+**Motivação para a Solução Escolhida:**
+- Um player pode ter preferências diferentes para as aventuras, como combater um monstro ou investigar uma casa assombrada.
+- Garante maior reaproveitamento dos dados dos players.
+
+### Regras de Negócio da Sessão
+- A sessão poderá ter nome, data de inicio e descrição
+- Cada sessão possui três status principais:
+  1. **Waiting:** Sessão aguardando início.
+  2. **In Progress:** Sessão em andamento, ativada após a simulação e confirmação das guildas.
+  3. **Closed:** Sessão encerrada, sem mais alterações permitidas.
+- Fluxo de status:
+  - De **Waiting** para **In Progress**: Ocorre após a confirmação das guildas.
+  - De **In Progress** para **Closed**: A sessão é finalizada manualmente pelo usuário.
+- **Visualização dos Detalhes:**
+  - Guildas e informações só podem ser acessadas em sessões com status **In Progress** ou **Closed**.
+
+### Regras de Negócio das GUildas
+- A Guilda poderá ter nome e quantidade X de pessoas
+- A(s) Guildaa(s) só será criada no momento da simulação e depois confirmação.
+
+### Nota Importante
+- Todos os jogadores podem participar de todas as sessões, desde que sejam vinculados quando o status da sessão seja Waiting.
+
