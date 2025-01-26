@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GuildController;
 use App\Http\Controllers\GuildSimulateController;
 use App\Http\Controllers\PlayerClassController;
 use App\Http\Controllers\PlayerController;
@@ -33,6 +34,11 @@ Route::prefix('sessions')->group(function () {
         Route::post('/', [PlayerSessionController::class, 'associate'])->name('sessions.players.associate');
         Route::delete('/', [PlayerSessionController::class, 'unassociate'])->name('sessions.players.unassociate');
     });
+});
+
+Route::prefix('guilds')->group(function () {
+    Route::get('/{id}', [GuildController::class, 'show'])->name('guilds.show');
+    Route::get('/sessions/{sessionId}', [GuildController::class, 'getBySession'])->name('guilds.bySessionn');
 });
 
 Route::post('/simulate-guilds', [GuildSimulateController::class, 'simulate']);

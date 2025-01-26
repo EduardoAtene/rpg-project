@@ -13,6 +13,11 @@ class Guild extends Model
 
     public function players()
     {
-        return $this->belongsToMany(Player::class, 'player_guilds');
+        return $this->belongsToMany(Player::class, 'player_guilds', 'guild_id', 'player_id');
+    }
+
+    public function session()
+    {
+        return $this->belongsTo(RpgSession::class, 'session_id');
     }
 }

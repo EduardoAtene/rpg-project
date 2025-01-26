@@ -31,6 +31,8 @@ class PlayerSessionService
     {
         $this->validateSessionExists($sessionId);
 
+        $this->playerSessionRepository->unassociateAllPlayersFromSession($sessionId);
+        
         $this->playerSessionRepository->associatePlayers($sessionId, $playerIds);
     }
 

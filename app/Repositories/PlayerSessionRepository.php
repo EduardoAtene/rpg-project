@@ -46,6 +46,11 @@ class PlayerSessionRepository implements PlayerSessionInterface
             ->delete(['status' => 'missing']);
     }
 
+    public function unassociateAllPlayersFromSession(int $sessionId)
+    {
+        $this->playerSessionModel->where('session_id', $sessionId)->delete(['status' => 'missing']);
+    }
+
     public function getAllPlayersAssociateSession(int $sessionId)
     {
         return $this->playerModel->with('class')->whereHas('sessions', function ($query) use ($sessionId) {

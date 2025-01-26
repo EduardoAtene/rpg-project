@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class GuildSimulatorSessionResource extends JsonResource
 {
-    // 'players' => PlayerResource::collection($data['players']), tentar reutilizar o resource do player. Está dando problema pq precisa pegar o ID. Deixar melhorias final
-
     public function toArray($request)
     {
         $data = $this->resource;

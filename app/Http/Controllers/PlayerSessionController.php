@@ -34,10 +34,10 @@ class PlayerSessionController extends Controller
         );
     }
 
-    public function associate(AssociatePlayerSessionRequest $request, int $id): JsonResponse
+    public function associate(AssociatePlayerSessionRequest $request,  $id): JsonResponse
     {
         $validated = $request->validated();
-        $this->playerSessionService->associatePlayersToSession($id, $validated['player_ids']);
+        $this->playerSessionService->associatePlayersToSession(intval($id), $validated['player_ids']);
 
         return response()->json(
             ResponseHelper::successResponse('Jogadores associados à sessão com sucesso!')

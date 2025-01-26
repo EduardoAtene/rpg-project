@@ -86,7 +86,7 @@ class GuildSimulateService
         }
 
         $data = [
-            "status" => "closed"
+            "status" => "in_progress"
         ];
 
         $this->rpgSessionRepository->update($sessionId, $data);
@@ -106,8 +106,8 @@ class GuildSimulateService
 
     private function validateStatusRpgSession(object $rpgSession): void
     {
-        if ($rpgSession->status === 'waiting') {
-            throw new ValidateException("A sessão de RPG com o ID {$rpgSession->id} ainda não iniciou.");
+        if ($rpgSession->status === 'in_progress') {
+            throw new ValidateException("A sessão de RPG com o ID {$rpgSession->id} ainda está iniciada.");
         }
 
         if ($rpgSession->status === 'closed') {
