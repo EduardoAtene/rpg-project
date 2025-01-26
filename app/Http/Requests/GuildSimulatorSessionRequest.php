@@ -55,7 +55,7 @@ class GuildSimulatorSessionRequest extends FormRequest
             'guilds.*.name.max' => 'O campo name de cada guilda não pode exceder 255 caracteres.',
             'guilds.*.player_count.required' => 'O campo player_count de cada guilda é obrigatório.',
             'guilds.*.player_count.integer' => 'O campo player_count de cada guilda deve ser um número inteiro.',
-            'guilds.*.player_count.min' => 'O campo player_count de cada guilda deve ser pelo menos 1.',
+            'guilds.*.player_count.min' => 'O campo player_count de cada guilda deve ser pelo menos 3.',
         ];
     }
 }
